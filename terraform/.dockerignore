@@ -1,0 +1,8 @@
+*.pem
+*.tfvars
+*.auto.tfvars
+terraform.tfstate
+terraform.tfstate.backup
+.terraform/
+id_rsa
+id_ed25519

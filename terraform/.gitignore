@@ -1,0 +1,15 @@
+#OCI private key
+*.pem
+
+#Terraform secrets
+*.tfvars
+*.auto.tfvars
+
+#Terraform state
+terraform.tfstate
+terraform.tfstate.backup
+.terraform/
+
+#SSH keys
+id_rsa
+id_ed25519
