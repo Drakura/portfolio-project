@@ -1,10 +1,9 @@
-variable "tenancy_ocid" {}
-variable "user_ocid" {}
-variable "fingerprint" {}
-variable "private_key_path" {}
-variable "region" {}
-variable "compartment_id" {}
-
-variable "image_name" {}
-variable "container_name" {}
-variable "external_port" {}
+variable "tenancy_ocid" { type = string }
+variable "user_ocid" { type = string }
+variable "fingerprint" { type = string }
+variable "private_key_path" { type = string }
+variable "region" { type = string }
+variable "compartment_ocid" { type = string }
+variable "image_name" { type = string }
+variable "container_name" { type = string }
+variable "external_port" { type = number }
