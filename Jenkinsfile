@@ -3,7 +3,7 @@ pipeline {
 	triggers { pollSCM('H/2 * * * *') }
 
 	environment {
-		IMAGE_NAME = 'ghcr.io/Drakura/portfolio-project'
+		IMAGE_NAME = 'ghcr.io/drakura/portfolio-project'
 		IMAGE_TAG = "${BUILD_NUMBER}"
 		CONTAINER_NAME = 'portfolio-project-application'
 		APPLICATION_PORT = '8080'
