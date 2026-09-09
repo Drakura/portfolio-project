@@ -3,7 +3,7 @@ pipeline {
 	triggers { pollSCM('H/2 * * * *') }
 
 	environment {
-		IMAGE_NAME = 'portfolio-project'
+		IMAGE_NAME = 'ghcr.io/Drakura/portfolio-project'
 		IMAGE_TAG = "${BUILD_NUMBER}"
 		CONTAINER_NAME = 'portfolio-project-application'
 		APPLICATION_PORT = '8080'
@@ -24,14 +24,26 @@ pipeline {
 			}
 		}
 
-		stage('Build Docker Image') {
+		stage('Build and Push ARM64 Image') {
 			steps {
-				sh '''
-				docker build \
-				-t ${IMAGE_NAME}:${IMAGE_TAG} \
-				-t ${IMAGE_NAME}:latest \
-				.
-				'''
+				withCredentials([usernamePassword(
+				credentialsId: 'github-ghcr-token',
+				usernameVariable: 'GHCR_USER',
+				passwordVariable: 'GHCR_TOKEN')]) {
+					sh '''
+						echo "$GHCR_TOKEN" | docker login ghcr.io \
+						-u "$GHCR_USER" \
+						--password-stdin
+
+						docker buildx build \
+						--platform linux/arm64 \
+						-t ${IMAGE_NAME}:${IMAGE_TAG} \
+						-t ${IMAGE_NAME}:latest \
+						--push .
+
+						docker logout ghcr.io
+						'''
+				}
 			}
 		}
 
