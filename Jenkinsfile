@@ -70,25 +70,26 @@ pipeline {
 					file(credentialsId: 'oci-api-private-key', variable: 'OCI_PRIVATE_KEY')
 				]) {
 
+					sh '''
+						echo "Checking Jenkins OCI private key..."
+                                                ls -l "$OCI_PRIVATE_KEY"
+                                                openssl pkey -in "$OCI_PRIVATE_KEY" -noout
+					'''
+
 					dir('terraform') {
 						sh '''
-							echo "Checking Jenkins OCI private key..."
-							ls -l "$OCI_PRIVATE_KEY"
-							openssl pkey -in "$OCI_PRIVATE_KEY" -noout						
-						'''
-
-						terraform plan \
-						-input=false \
-						-out=tfplan \
-						-var="tenancy_ocid=${OCI_TENANCY_OCID}" \
-						-var="user_ocid=${OCI_USER_OCID}" \
-						-var="fingerprint=${OCI_FINGERPRINT}" \
-						-var="private_key_path=${OCI_PRIVATE_KEY}" \
-						-var="region=${OCI_REGION}" \
-						-var="compartment_ocid=${OCI_COMPARTMENT_OCID}" \
-						-var="image_name=${IMAGE_NAME}:${IMAGE_TAG}" \
-						-var="container_name=${CONTAINER_NAME}" \
-						-var="external_port=${APPLICATION_PORT}"
+							terraform plan \
+							-input=false \
+							-out=tfplan \
+							-var="tenancy_ocid=${OCI_TENANCY_OCID}" \
+							-var="user_ocid=${OCI_USER_OCID}" \
+							-var="fingerprint=${OCI_FINGERPRINT}" \
+							-var="private_key_path=${OCI_PRIVATE_KEY}" \
+							-var="region=${OCI_REGION}" \
+							-var="compartment_ocid=${OCI_COMPARTMENT_OCID}" \
+							-var="image_name=${IMAGE_NAME}:${IMAGE_TAG}" \
+							-var="container_name=${CONTAINER_NAME}" \
+							-var="external_port=${APPLICATION_PORT}"
 						'''
 				
 					}
