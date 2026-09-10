@@ -65,7 +65,7 @@ pipeline {
 					string(credentialsId: 'oci-tenancy-ocid', variable: 'OCI_TENANCY_OCID'),
 					string(credentialsId: 'oci-user-ocid', variable: 'OCI_USER_OCID'),
 					string(credentialsId: 'oci-fingerprint', variable: 'OCI_FINGERPRINT'),
-					string(credentialsId: 'oci-region', variable: 'OCI_COMPARTMENT_OCID'),
+					string(credentialsId: 'oci-region', variable: 'OCI_REGION'),
 					string(credentialsId: 'oci-compartment-ocid', variable: 'OCI_COMPARTMENT_OCID'),
 					file(credentialsId: 'oci-api-private-key', variable: 'OCI_PRIVATE_KEY')
 				]) {
