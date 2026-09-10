@@ -70,10 +70,10 @@ pipeline {
 					file(credentialsId: 'oci-api-private-key', variable: 'OCI_PRIVATE_KEY')
 				]) {
 
-                                        export TF_VAR_private_key="$(cat "$OCI_PRIVATE_KEY")"
-
 					dir('terraform') {
 						sh '''
+							export TF_VAR_private_key="$(cat "$OCI_PRIVATE_KEY")"
+							
 							terraform plan \
 							-input=false \
 							-out=tfplan \
