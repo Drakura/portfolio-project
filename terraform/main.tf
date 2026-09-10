@@ -125,7 +125,7 @@ resource "oci_core_instance" "vm" {
   availability_domain = data.oci_identity_availability_domains.ads.availability_domains[0].name
   shape               = "VM.Standard.A1.Flex"
 
-  state = "STOPPED"
+  state = "RUNNING"
 
   shape_config {
     ocpus         = 1
