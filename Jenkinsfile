@@ -69,8 +69,14 @@ pipeline {
 					string(credentialsId: 'oci-compartment-ocid', variable: 'OCI_COMPARTMENT_OCID'),
 					file(credentialsId: 'oci-api-private-key', variable: 'OCI_PRIVATE_KEY')
 				]) {
+
 					dir('terraform') {
 						sh '''
+							echo "Checking Jenkins OCI private key..."
+							ls -l "$OCI_PRIVATE_KEY"
+							openssl pkey -in "$OCI_PRIVATE_KEY" -noout						
+						'''
+
 						terraform plan \
 						-input=false \
 						-out=tfplan \
