@@ -62,7 +62,15 @@ resource "oci_core_network_security_group" "app_nsg" {
   display_name   = "app_nsg"
 }
 
-#Allow inbound traffic to my app port
+#Allow outbound traffic
+resource "oci_core_network_security_group_security_rule" "allow_egress" {
+  network_security_group_id = oci_core_network_security_group.app_nsg.id
+  direction                 = "EGRESS"
+  protocol                  = "all"
+  destination               = "0.0.0.0/0"
+}
+
+#Allow inbound traffic
 resource "oci_core_network_security_group_security_rule" "allow_app" {
   network_security_group_id = oci_core_network_security_group.app_nsg.id
   direction                 = "INGRESS"
