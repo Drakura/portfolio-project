@@ -75,6 +75,7 @@ pipeline {
 							export TF_VAR_private_key="$(cat "$OCI_PRIVATE_KEY")"
 							
 							terraform plan \
+							-replace=oci_core_instance.vm \
 							-input=false \
 							-out=tfplan \
 							-var="tenancy_ocid=${OCI_TENANCY_OCID}" \
