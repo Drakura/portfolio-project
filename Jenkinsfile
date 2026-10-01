@@ -99,7 +99,7 @@ pipeline {
 		stage('Verify Deployment') {
 			steps { sh '''
 
-				VM_IP = $(cd terraform && terraform output -raw public_ip)
+				VM_IP=$(cd terraform && terraform output -raw public_ip)
 
 				ssh -o StrictHostKeyChecking=no ubuntu@$VM_IP "
 					sudo docker pull $(IMAGE_NAME}:${IMAGE_TAG} &&
