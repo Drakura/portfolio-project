@@ -32,9 +32,3 @@ apt-get install -y \
 
 systemctl enable docker
 systemctl start docker
-
-docker pull ${image_name}
-
-docker run -d \
-	-p ${external_port}:80 \
-	--name ${container_name} ${image_name}
