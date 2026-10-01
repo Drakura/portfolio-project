@@ -98,7 +98,17 @@ pipeline {
 
 		stage('Verify Deployment') {
 			steps { sh '''
-				docker ps --filter "name=${CONTAINER_NAME}"
+
+				VM_IP = $(cd terraform && terraform output -raw public_ip)
+
+				ssh -o StrictHostKeyChecking=no ubuntu@$VM_IP "
+					sudo docker pull $(IMAGE_NAME}:${IMAGE_TAG} &&
+					sudo docker rm -f ${CONTAINER_NAME} || true
+					sudo docker run -d \
+						-p ${APPLICATION_PORT}:80 \
+						--name ${CONTAINER_NAME} \
+						${IMAGE_NAME}:${IMAGE_TAG}
+				"
 				'''
 			}
 		}
