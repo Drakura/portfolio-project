@@ -98,16 +98,27 @@ pipeline {
 			steps { 
 				sshagent(credentials: ['oci-vm-ssh-key']) {
 					sh '''
-				
-
 						VM_IP=$(cd terraform && terraform output -raw public_ip)
 
 						echo "Deploying to OCI VM at $VM_IP"
+						echo "Waiting for Docker to become available..."
 
-						ssh -o StrictHostKeyChecking=no ubuntu@$VM_IP "
-							sudo docker pull ${IMAGE_NAME}:${IMAGE_TAG} &&
-							sudo docker rm -f ${CONTAINER_NAME} || true
-							sudo docker run -d \
+						until ssh -o StrictHostKeyChecking=no ubuntu@"$VM_IP" \
+							"command -v docker >/dev/null 2>&1"; do
+							echo "Docker is not ready yet. Waiting 10 seconds..."
+							sleep 10
+						done
+
+						echo "Docker is ready."
+
+						ssh -o StrictHostKeyChecking=no ubuntu@"$VM_IP" \
+							"sudo docker pull ${IMAGE_NAME}:${IMAGE_TAG}"
+
+						ssh -o StrictHostKeyChecking=no ubuntu@"$VM_IP" \
+							"sudo docker rm -f ${CONTAINER_NAME} || true"
+
+						ssh -o StrictHostKeyChecking=no ubuntu@"$VM_IP" \
+							"sudo docker run -d \
 								-p ${APPLICATION_PORT}:80 \
 								--name ${CONTAINER_NAME} \
 								${IMAGE_NAME}:${IMAGE_TAG}
