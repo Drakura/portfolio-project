@@ -97,19 +97,25 @@ pipeline {
 		}
 
 		stage('Verify Deployment') {
-			steps { sh '''
+			steps { 
+				sshagent(credentials: ['oci-vm-ssh-key']) {
+					sh '''
+				
 
-				VM_IP=$(cd terraform && terraform output -raw public_ip)
+						VM_IP=$(cd terraform && terraform output -raw public_ip)
 
-				ssh -o StrictHostKeyChecking=no ubuntu@$VM_IP "
-					sudo docker pull $(IMAGE_NAME}:${IMAGE_TAG} &&
-					sudo docker rm -f ${CONTAINER_NAME} || true
-					sudo docker run -d \
-						-p ${APPLICATION_PORT}:80 \
-						--name ${CONTAINER_NAME} \
-						${IMAGE_NAME}:${IMAGE_TAG}
-				"
-				'''
+						echo "Deploying to OCI VM at $VM_IP"
+
+						ssh -o StrictHostKeyChecking=no ubuntu@$VM_IP "
+							sudo docker pull ${IMAGE_NAME}:${IMAGE_TAG} &&
+							sudo docker rm -f ${CONTAINER_NAME} || true
+							sudo docker run -d \
+								-p ${APPLICATION_PORT}:80 \
+								--name ${CONTAINER_NAME} \
+								${IMAGE_NAME}:${IMAGE_TAG}
+							"
+					'''
+				}
 			}
 		}
 	}
