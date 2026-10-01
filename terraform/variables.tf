@@ -4,6 +4,4 @@ variable "fingerprint" { type = string }
 variable "private_key" { type = string }
 variable "region" { type = string }
 variable "compartment_ocid" { type = string }
-variable "image_name" { type = string }
-variable "container_name" { type = string }
 variable "external_port" { type = number }

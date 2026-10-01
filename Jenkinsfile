@@ -82,8 +82,6 @@ pipeline {
 							-var="fingerprint=${OCI_FINGERPRINT}" \
 							-var="region=${OCI_REGION}" \
 							-var="compartment_ocid=${OCI_COMPARTMENT_OCID}" \
-							-var="image_name=${IMAGE_NAME}:${IMAGE_TAG}" \
-							-var="container_name=${CONTAINER_NAME}" \
 							-var="external_port=${APPLICATION_PORT}"
 						'''
 				
