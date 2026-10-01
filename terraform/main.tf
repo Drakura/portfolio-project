@@ -154,11 +154,7 @@ resource "oci_core_instance" "vm" {
   metadata = {
     ssh_authorized_keys = file("${path.module}/id_ed25519.pub")
     user_data = base64encode(
-      templatefile("${path.module}/cloud-init.sh", {
-        image_name     = var.image_name
-        container_name = var.container_name
-        external_port  = var.external_port
-      })
+      file("${path.module}/cloud-init.sh")
     )
   }
 
