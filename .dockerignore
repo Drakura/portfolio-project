@@ -1,0 +1,24 @@
+# Git
+.git
+
+# Terraform
+**/.terraform/
+**/.terraform.lock.hcl
+*.tfstate
+*.tfstate.*
+*.tfvars
+*.tfvars.json
+*.auto.tfvars
+tfplan
+*.tfplan
+
+# Credentials
+*.pem
+id_rsa
+id_ed25519
+.env
+.env.*
+
+# Logs and temporary files
+*.log
+.venv/

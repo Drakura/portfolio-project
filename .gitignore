@@ -1,0 +1,21 @@
+# Terraform
+**/.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+*.tfvars.json
+*.auto.tfvars
+tfplan
+*.tfplan
+crash.log
+
+# Credentials
+*.pem
+id_rsa
+id_ed25519
+.env
+.env.*
+
+# Logs and temporary files
+*.log
+.venv/
