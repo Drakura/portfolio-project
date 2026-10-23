@@ -72,7 +72,7 @@ pipeline {
 
 					dir('terraform') {
 						sh '''
-							export TF_VAR_private_key="$(cat "$OCI_PRIVATE_KEY")"
+							export TF_VAR_private_key="$("$OCI_PRIVATE_KEY")"
 							
 							terraform plan \
 							-input=false \
