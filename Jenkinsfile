@@ -31,6 +31,10 @@ pipeline {
 				usernameVariable: 'GHCR_USER',
 				passwordVariable: 'GHCR_TOKEN')]) {
 					sh '''
+						set +x
+						export DOCKER_CONFIG="$(mktemp -d)"
+						trap 'rm -rf "$DOCKER_CONFIG"' EXIT
+
 						echo "$GHCR_TOKEN" | docker login ghcr.io \
 						-u "$GHCR_USER" \
 						--password-stdin
