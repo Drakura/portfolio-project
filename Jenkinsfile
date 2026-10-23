@@ -59,40 +59,42 @@ pipeline {
 			steps { dir('terraform') { sh 'terraform validate' } }
 		}
 
-		stage('Terraform Plan') {
-			steps {
-				withCredentials([
-					string(credentialsId: 'oci-tenancy-ocid', variable: 'OCI_TENANCY_OCID'),
-					string(credentialsId: 'oci-user-ocid', variable: 'OCI_USER_OCID'),
-					string(credentialsId: 'oci-fingerprint', variable: 'OCI_FINGERPRINT'),
-					string(credentialsId: 'oci-region', variable: 'OCI_REGION'),
-					string(credentialsId: 'oci-compartment-ocid', variable: 'OCI_COMPARTMENT_OCID'),
-					file(credentialsId: 'oci-api-private-key', variable: 'OCI_PRIVATE_KEY')
-				]) {
+		stage('Terraform Deployment') {
+			stages {
+				stage('Terraform Plan and Apply') {
+					steps {
+						withCredentials([
+							string(credentialsId: 'oci-tenancy-ocid', variable: 'OCI_TENANCY_OCID'),
+							string(credentialsId: 'oci-user-ocid', variable: 'OCI_USER_OCID'),
+							string(credentialsId: 'oci-fingerprint', variable: 'OCI_FINGERPRINT'),
+							string(credentialsId: 'oci-region', variable: 'OCI_REGION'),
+							string(credentialsId: 'oci-compartment-ocid', variable: 'OCI_COMPARTMENT_OCID'),
+							file(credentialsId: 'oci-api-private-key', variable: 'OCI_PRIVATE_KEY')
+						]) {
+							dir('terraform') {
+								sh '''
+									set -e
+									set +x
 
-					dir('terraform') {
-						sh '''
-							set +x
-							export TF_VAR_private_key="$OCI_PRIVATE_KEY"
-							
-							terraform plan \
-							-input=false \
-							-out=tfplan \
-							-var="tenancy_ocid=${OCI_TENANCY_OCID}" \
-							-var="user_ocid=${OCI_USER_OCID}" \
-							-var="fingerprint=${OCI_FINGERPRINT}" \
-							-var="region=${OCI_REGION}" \
-							-var="compartment_ocid=${OCI_COMPARTMENT_OCID}" \
-							-var="external_port=${APPLICATION_PORT}"
-						'''
-				
+									export TF_VAR_private_key="$OCI_PRIVATE_KEY"
+
+									terraform plan \
+										-input=false \
+										-out=tfplan \
+										-var="tenancy_ocid=${OCI_TENANCY_OCID}" \
+										-var="user_ocid=${OCI_USER_OCID}" \
+										-var="fingerprint=${OCI_FINGERPRINT}" \
+										-var="region=${OCI_REGION}" \
+										-var="compartment_ocid=${OCI_COMPARTMENT_OCID}" \
+										-var="external_port=${APPLICATION_PORT}"
+
+									terraform apply -input=false -auto-approve tfplan
+								'''
+							}
+						}
 					}
 				}
 			}
-		}
-
-		stage('Terraform Apply') {
-			steps { dir('terraform') { sh 'terraform apply -input=false -auto-approve tfplan' } }
 		}
 
 		stage('Verify Deployment') {
